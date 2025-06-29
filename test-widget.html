@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Widget NNIA</title>
+    <link rel="stylesheet" href="./dist/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .test-info {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Test del Widget NNIA</h1>
+        
+        <div class="test-info">
+            <h3>Información del Test:</h3>
+            <ul>
+                <li><strong>Archivo JS:</strong> nnia-widget.js (34.24 kB)</li>
+                <li><strong>Archivo CSS:</strong> style.css (12.34 kB)</li>
+                <li><strong>Formato UMD:</strong> nnia-widget.umd.cjs (21.50 kB)</li>
+                <li><strong>Estado:</strong> ✅ Build completado exitosamente</li>
+            </ul>
+        </div>
+
+        <p>Si puedes ver el widget de chat en la esquina inferior derecha, ¡el deploy fue exitoso!</p>
+        
+        <p>El widget debería aparecer automáticamente. Si no aparece, verifica la consola del navegador para errores.</p>
+    </div>
+
+    <!-- Cargar el widget -->
+    <script src="./dist/nnia-widget.js"></script>
+    <script>
+        // Configuración de prueba del widget
+        window.NNIAWidgetConfig = {
+            businessId: 'test-business-123',
+            apiUrl: 'https://your-backend-url.com', // Cambiar por tu URL real
+            position: 'bottom-right',
+            primaryColor: '#3b82f6',
+            welcomeMessage: '¡Hola! Soy NNIA, tu asistente virtual. ¿En qué puedo ayudarte?'
+        };
+        
+        console.log('✅ Widget NNIA cargado correctamente');
+        console.log('Configuración:', window.NNIAWidgetConfig);
+    </script>
+</body>
+</html> 
