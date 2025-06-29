@@ -8,7 +8,7 @@ export default defineConfig({
     lib: {
       entry: 'src/main.jsx',
       name: 'NNIAWidget',
-      fileName: 'nnia-widget',
+      fileName: (format) => `nnia-widget.${format === 'umd' ? 'umd.js' : format}`,
       formats: ['es', 'umd']
     },
     rollupOptions: {
