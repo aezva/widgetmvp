@@ -4,7 +4,7 @@ import ChatWidget from './components/ChatWidget.jsx'
 import './index.css'
 
 // Función para inicializar el widget
-window.initNNIAWidget = function(config = {}) {
+function initNNIAWidget(config = {}) {
   const container = document.createElement('div')
   container.id = 'nnia-widget-container'
   document.body.appendChild(container)
@@ -14,6 +14,21 @@ window.initNNIAWidget = function(config = {}) {
       <ChatWidget config={config} />
     </React.StrictMode>
   )
+  
+  return {
+    destroy: () => {
+      const container = document.getElementById('nnia-widget-container')
+      if (container) {
+        ReactDOM.unmountComponentAtNode(container)
+        container.remove()
+      }
+    }
+  }
+}
+
+// Exportar para UMD
+if (typeof window !== 'undefined') {
+  window.initNNIAWidget = initNNIAWidget
 }
 
 // Para desarrollo local

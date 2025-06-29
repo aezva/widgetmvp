@@ -6,15 +6,15 @@ class NNIAService {
 
   async sendMessage(message) {
     try {
-      const response = await fetch(`${this.apiUrl}/api/nnia/chat`, {
+      const response = await fetch(`${this.apiUrl}/nnia/respond`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message,
-          businessId: this.businessId,
-          origin: 'widget'
+          clientId: this.businessId,
+          source: 'widget'
         })
       })
 
@@ -32,7 +32,7 @@ class NNIAService {
 
   async getWidgetConfig(businessId) {
     try {
-      const response = await fetch(`${this.apiUrl}/api/widget/config/${businessId}`)
+      const response = await fetch(`${this.apiUrl}/nnia/widget/config/${businessId}`)
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)

@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Widget NNIA</title>
-    <link rel="stylesheet" href="./dist/style.css">
+    <title>Test NNIA Widget</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
             padding: 20px;
             background-color: #f5f5f5;
         }
-        .test-container {
+        .container {
             max-width: 800px;
             margin: 0 auto;
             background: white;
@@ -23,47 +23,207 @@
             color: #333;
             text-align: center;
         }
-        .test-info {
-            background: #e8f4fd;
+        .info {
+            background: #e3f2fd;
             padding: 15px;
             border-radius: 5px;
             margin: 20px 0;
         }
+        .test-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .test-button:hover {
+            background: #2563eb;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
-    <div class="test-container">
-        <h1>🧪 Test del Widget NNIA</h1>
+    <div class="container">
+        <h1>Test NNIA Widget</h1>
         
-        <div class="test-info">
-            <h3>Información del Test:</h3>
-            <ul>
-                <li><strong>Archivo JS:</strong> nnia-widget.js (34.24 kB)</li>
-                <li><strong>Archivo CSS:</strong> style.css (12.34 kB)</li>
-                <li><strong>Formato UMD:</strong> nnia-widget.umd.cjs (21.50 kB)</li>
-                <li><strong>Estado:</strong> ✅ Build completado exitosamente</li>
-            </ul>
+        <div class="info">
+            <h3>Información de Prueba:</h3>
+            <p><strong>Business ID:</strong> <span id="businessId">test-business-123</span></p>
+            <p><strong>API URL:</strong> <span id="apiUrl">http://localhost:3001</span></p>
+            <p><strong>Widget URL:</strong> <span id="widgetUrl">./dist/nnia-widget.umd.js</span></p>
+            <p><strong>Endpoint:</strong> /nnia/respond</p>
         </div>
 
-        <p>Si puedes ver el widget de chat en la esquina inferior derecha, ¡el deploy fue exitoso!</p>
-        
-        <p>El widget debería aparecer automáticamente. Si no aparece, verifica la consola del navegador para errores.</p>
+        <div>
+            <h3>Controles de Prueba:</h3>
+            <button class="test-button" onclick="testWidgetLoad()">Probar Carga del Widget</button>
+            <button class="test-button" onclick="testWidgetConnection()">Probar Conexión Backend</button>
+            <button class="test-button" onclick="initWidget()">Inicializar Widget</button>
+            <button class="test-button" onclick="destroyWidget()">Destruir Widget</button>
+        </div>
+
+        <div id="testResults" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px; display: none;">
+            <h4>Resultados de Prueba:</h4>
+            <pre id="results"></pre>
+        </div>
+
+        <div id="status" style="margin-top: 20px;"></div>
     </div>
 
-    <!-- Cargar el widget -->
-    <script src="./dist/nnia-widget.js"></script>
+    <!-- NNIA Widget -->
+    <script src="./dist/nnia-widget.umd.js" onload="onWidgetLoad()" onerror="onWidgetError()"></script>
     <script>
-        // Configuración de prueba del widget
-        window.NNIAWidgetConfig = {
+        // Configuración del widget para pruebas
+        const testConfig = {
             businessId: 'test-business-123',
-            apiUrl: 'https://your-backend-url.com', // Cambiar por tu URL real
+            apiUrl: 'http://localhost:3001',
             position: 'bottom-right',
-            primaryColor: '#3b82f6',
-            welcomeMessage: '¡Hola! Soy NNIA, tu asistente virtual. ¿En qué puedo ayudarte?'
+            theme: {
+                primaryColor: '#3b82f6',
+                backgroundColor: '#ffffff',
+                textColor: '#1f2937'
+            },
+            welcomeMessage: '¡Hola! Soy NNIA, tu asistente virtual de prueba. ¿En qué puedo ayudarte?',
+            autoOpen: false,
+            showTimestamp: true,
+            maxMessages: 50
         };
-        
-        console.log('✅ Widget NNIA cargado correctamente');
-        console.log('Configuración:', window.NNIAWidgetConfig);
+
+        // Variables globales
+        let widgetInstance = null;
+        let widgetLoaded = false;
+
+        function onWidgetLoad() {
+            widgetLoaded = true;
+            logResult('✅ Widget cargado correctamente');
+            updateStatus('Widget cargado', 'success');
+        }
+
+        function onWidgetError() {
+            logResult('❌ Error al cargar el widget');
+            updateStatus('Error al cargar widget', 'error');
+        }
+
+        function testWidgetLoad() {
+            logResult('Probando carga del widget...');
+            
+            if (typeof window.initNNIAWidget === 'function') {
+                logResult('✅ Función initNNIAWidget disponible');
+                updateStatus('Función disponible', 'success');
+            } else {
+                logResult('❌ Función initNNIAWidget NO disponible');
+                updateStatus('Función no disponible', 'error');
+            }
+        }
+
+        function testWidgetConnection() {
+            logResult('Probando conexión al backend...');
+            
+            fetch(`${testConfig.apiUrl}/nnia/respond`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: 'Hola, esto es una prueba de conexión',
+                    clientId: testConfig.businessId,
+                    source: 'widget'
+                })
+            })
+            .then(response => {
+                logResult(`Respuesta del servidor: ${response.status} ${response.statusText}`);
+                if (response.ok) {
+                    updateStatus('Conexión exitosa', 'success');
+                } else {
+                    updateStatus('Error en conexión', 'error');
+                }
+                return response.json();
+            })
+            .then(data => {
+                logResult('Datos recibidos: ' + JSON.stringify(data, null, 2));
+            })
+            .catch(error => {
+                logResult('Error de conexión: ' + error.message);
+                updateStatus('Error de conexión', 'error');
+            });
+        }
+
+        function initWidget() {
+            if (!widgetLoaded) {
+                logResult('❌ Widget no cargado aún');
+                return;
+            }
+
+            if (typeof window.initNNIAWidget !== 'function') {
+                logResult('❌ Función initNNIAWidget no disponible');
+                return;
+            }
+
+            try {
+                logResult('Inicializando widget...');
+                widgetInstance = window.initNNIAWidget(testConfig);
+                logResult('✅ Widget inicializado correctamente');
+                updateStatus('Widget inicializado', 'success');
+            } catch (error) {
+                logResult('❌ Error al inicializar widget: ' + error.message);
+                updateStatus('Error al inicializar', 'error');
+            }
+        }
+
+        function destroyWidget() {
+            if (widgetInstance && widgetInstance.destroy) {
+                try {
+                    widgetInstance.destroy();
+                    widgetInstance = null;
+                    logResult('✅ Widget destruido correctamente');
+                    updateStatus('Widget destruido', 'success');
+                } catch (error) {
+                    logResult('❌ Error al destruir widget: ' + error.message);
+                }
+            } else {
+                logResult('No hay widget para destruir');
+            }
+        }
+
+        function logResult(message) {
+            const resultsDiv = document.getElementById('testResults');
+            const resultsPre = document.getElementById('results');
+            
+            resultsDiv.style.display = 'block';
+            const timestamp = new Date().toLocaleTimeString();
+            resultsPre.textContent += `[${timestamp}] ${message}\n`;
+            resultsPre.scrollTop = resultsPre.scrollHeight;
+        }
+
+        function updateStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="${type}">${message}</div>`;
+        }
+
+        // Verificar estado inicial
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (!widgetLoaded) {
+                    logResult('⚠️ Widget no se cargó automáticamente');
+                    updateStatus('Widget no cargado', 'error');
+                }
+            }, 2000);
+        });
     </script>
 </body>
 </html> 
