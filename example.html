@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo NNIA Widget</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .feature {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        .feature h3 {
+            color: #3b82f6;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Ejemplo de NNIA Widget</h1>
+        
+        <p>
+            Esta es una página de ejemplo para demostrar cómo funciona el widget de chat de NNIA. 
+            El widget aparecerá en la esquina inferior derecha de la pantalla.
+        </p>
+        
+        <p>
+            Puedes hacer clic en el ícono de chat para abrir la conversación con NNIA, 
+            nuestro asistente virtual inteligente.
+        </p>
+
+        <div class="features">
+            <div class="feature">
+                <h3>💬 Chat Inteligente</h3>
+                <p>Conversa naturalmente con NNIA sobre citas, reservas y cualquier consulta sobre nuestro negocio.</p>
+            </div>
+            <div class="feature">
+                <h3>📅 Agendar Citas</h3>
+                <p>NNIA puede ayudarte a agendar citas de forma rápida y eficiente, verificando la disponibilidad en tiempo real.</p>
+            </div>
+            <div class="feature">
+                <h3>🏪 Hacer Reservas</h3>
+                <p>Reserva mesas, espacios o servicios de manera sencilla a través del chat.</p>
+            </div>
+            <div class="feature">
+                <h3>🎨 Personalizable</h3>
+                <p>El widget se adapta a los colores y estilo de tu sitio web, manteniendo la coherencia visual.</p>
+            </div>
+        </div>
+
+        <p style="text-align: center; margin-top: 40px; color: #999;">
+            <em>¡Prueba el widget haciendo clic en el ícono de chat en la esquina inferior derecha!</em>
+        </p>
+    </div>
+
+    <!-- NNIA Widget -->
+    <script src="./dist/nnia-widget.umd.cjs"></script>
+    <script>
+        window.initNNIAWidget({
+            businessId: 'demo-business',
+            apiUrl: 'http://localhost:3001',
+            position: 'bottom-right',
+            theme: {
+                primaryColor: '#3b82f6',
+                backgroundColor: '#ffffff',
+                textColor: '#1f2937'
+            },
+            welcomeMessage: '¡Hola! Soy NNIA, tu asistente virtual. ¿En qué puedo ayudarte hoy?',
+            autoOpen: false,
+            showTimestamp: true,
+            maxMessages: 50
+        });
+    </script>
+</body>
+</html> 
