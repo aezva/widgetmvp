@@ -11,13 +11,17 @@ export default defineConfig({
       fileName: (format) => `nnia-widget.${format === 'umd' ? 'umd.js' : format}`,
       formats: ['es', 'umd']
     },
+    minify: 'terser',
+    sourcemap: false,
     rollupOptions: {
       external: ['react', 'react-dom'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM'
-        }
+        },
+        intro: '',
+        outro: ''
       }
     }
   }
