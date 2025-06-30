@@ -1,4 +1,4 @@
-import require$$0 from "react";
+import require$$0, { useState, useRef, useEffect } from "react";
 import require$$0$1 from "react-dom";
 var jsxRuntime = { exports: {} };
 var reactJsxRuntime_production_min = {};
@@ -31,20 +31,21 @@ function requireReactJsxRuntime_production_min() {
   return reactJsxRuntime_production_min;
 }
 var reactJsxRuntime_development = {};
-/**
- * @license React
- * react-jsx-runtime.development.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 var hasRequiredReactJsxRuntime_development;
 function requireReactJsxRuntime_development() {
   if (hasRequiredReactJsxRuntime_development) return reactJsxRuntime_development;
   hasRequiredReactJsxRuntime_development = 1;
-  if (process.env.NODE_ENV !== "production") {
+  var define_process_env_default2 = {};
+  /**
+   * @license React
+   * react-jsx-runtime.development.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */
+  if (define_process_env_default2.NODE_ENV !== "production") {
     (function() {
       var React = require$$0;
       var REACT_ELEMENT_TYPE = Symbol.for("react.element");
@@ -916,15 +917,17 @@ function requireReactJsxRuntime_development() {
   }
   return reactJsxRuntime_development;
 }
-if (process.env.NODE_ENV === "production") {
+var define_process_env_default$1 = {};
+if (define_process_env_default$1.NODE_ENV === "production") {
   jsxRuntime.exports = requireReactJsxRuntime_production_min();
 } else {
   jsxRuntime.exports = requireReactJsxRuntime_development();
 }
 var jsxRuntimeExports = jsxRuntime.exports;
 var client = {};
+var define_process_env_default = {};
 var m = require$$0$1;
-if (process.env.NODE_ENV === "production") {
+if (define_process_env_default.NODE_ENV === "production") {
   client.createRoot = m.createRoot;
   client.hydrateRoot = m.hydrateRoot;
 } else {
@@ -946,14 +949,116 @@ if (process.env.NODE_ENV === "production") {
     }
   };
 }
-const ChatWidget$1 = ChatWidget;
+class NNIAService {
+  constructor(config) {
+    this.apiUrl = config.apiUrl;
+    this.businessId = config.businessId;
+  }
+  async sendMessage(message) {
+    try {
+      const response = await fetch(`${this.apiUrl}/nnia/respond`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message,
+          clientId: this.businessId,
+          source: "widget"
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error al enviar mensaje a NNIA:", error);
+      throw error;
+    }
+  }
+  async getWidgetConfig(businessId) {
+    try {
+      const response = await fetch(`${this.apiUrl}/nnia/widget/config/${businessId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error al obtener configuración del widget:", error);
+      throw error;
+    }
+  }
+}
+const defaultWelcome = "¡Hola! Soy NNIA, tu asistente virtual. ¿En qué puedo ayudarte?";
+const ChatWidget = ({ config }) => {
+  const [messages, setMessages] = useState([
+    { id: 1, sender: "assistant", text: (config == null ? void 0 : config.welcomeMessage) || defaultWelcome }
+  ]);
+  const [newMessage, setNewMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+  const nniaService = new NNIAService(config);
+  useEffect(() => {
+    var _a;
+    (_a = messagesEndRef.current) == null ? void 0 : _a.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (newMessage.trim() === "") return;
+    const userMsg = { id: Date.now(), sender: "user", text: newMessage };
+    setMessages((prev) => [...prev, userMsg]);
+    setLoading(true);
+    try {
+      const data = await nniaService.sendMessage(newMessage);
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, sender: "assistant", text: data.nnia || "No se recibió respuesta de NNIA." }
+      ]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 2, sender: "assistant", text: "Ocurrió un error al conectar con NNIA." }
+      ]);
+    } finally {
+      setLoading(false);
+      setNewMessage("");
+    }
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "nnia-widget-card bg-white rounded-xl shadow-lg p-4 w-80 max-w-full slide-in", style: { fontFamily: "inherit" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold", children: "N" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold text-lg", children: "NNIA" })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col h-64 custom-scrollbar overflow-y-auto mb-2", children: [
+      messages.map((msg) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `flex ${msg.sender === "user" ? "justify-end" : "justify-start"} mb-1`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `rounded-2xl px-4 py-2 max-w-[80%] break-words shadow-sm text-sm ` + (msg.sender === "user" ? "bg-blue-500 text-white rounded-br-md" : "bg-gray-100 text-gray-900 rounded-bl-md"), children: msg.text }) }, msg.id)),
+      loading && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-start", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-gray-100 text-gray-900 rounded-2xl px-4 py-2 max-w-[80%] shadow-sm opacity-70 text-sm", children: "NNIA está escribiendo..." }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { ref: messagesEndRef })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSendMessage, className: "flex gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "input",
+        {
+          type: "text",
+          placeholder: "Escribe un mensaje...",
+          value: newMessage,
+          onChange: (e) => setNewMessage(e.target.value),
+          className: "flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400",
+          autoComplete: "off"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "submit", className: "bg-blue-500 hover:bg-blue-600 text-white rounded-lg px-3 py-2 text-sm font-semibold", disabled: loading, children: "Enviar" })
+    ] })
+  ] });
+};
 function initNNIAWidget(config = {}) {
   if (document.getElementById("nnia-widget-container")) return;
   const container = document.createElement("div");
   container.id = "nnia-widget-container";
   document.body.appendChild(container);
   client.createRoot(container).render(
-    /* @__PURE__ */ jsxRuntimeExports.jsx(require$$0.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChatWidget$1, { config }) })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(require$$0.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChatWidget, { config }) })
   );
   return {
     destroy: () => {
