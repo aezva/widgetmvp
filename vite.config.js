@@ -18,7 +18,13 @@ export default defineConfig({
     minify: 'terser',
     sourcemap: false,
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: (id, ctx) => {
+        const format = ctx && ctx.format;
+        if (format === 'es') {
+          return ['react', 'react-dom'].includes(id);
+        }
+        return false; // No externos en UMD
+      },
       output: {
         globals: {
           react: 'React',
