@@ -31423,15 +31423,36 @@ const getPositionStyle = (position) => {
 const ChatWidget = ({ config }) => {
   var _a;
   const [open, setOpen] = reactExports.useState(false);
-  const [messages, setMessages] = reactExports.useState([
-    { id: 1, sender: "assistant", text: (config == null ? void 0 : config.welcomeMessage) || defaultWelcome }
-  ]);
+  const [messages, setMessages] = reactExports.useState([]);
   const [newMessage, setNewMessage] = reactExports.useState("");
   const [loading, setLoading] = reactExports.useState(false);
+  const [widgetConfig, setWidgetConfig] = reactExports.useState(null);
+  const [configLoading, setConfigLoading] = reactExports.useState(true);
   const messagesEndRef = reactExports.useRef(null);
   const nniaService = new NNIAService(config);
-  const primaryColor = ((_a = config == null ? void 0 : config.theme) == null ? void 0 : _a.primaryColor) || defaultPrimary;
-  const position = (config == null ? void 0 : config.position) || defaultPosition;
+  reactExports.useEffect(() => {
+    const loadWidgetConfig = async () => {
+      if (!(config == null ? void 0 : config.businessId) || !(config == null ? void 0 : config.apiUrl)) {
+        setConfigLoading(false);
+        return;
+      }
+      try {
+        const widgetData = await nniaService.getWidgetConfig(config.businessId);
+        setWidgetConfig(widgetData);
+        setMessages([
+          { id: 1, sender: "assistant", text: (widgetData == null ? void 0 : widgetData.welcomeMessage) || defaultWelcome }
+        ]);
+      } catch (error) {
+        console.error("Error cargando configuración del widget:", error);
+        setMessages([
+          { id: 1, sender: "assistant", text: defaultWelcome }
+        ]);
+      } finally {
+        setConfigLoading(false);
+      }
+    };
+    loadWidgetConfig();
+  }, [config == null ? void 0 : config.businessId, config == null ? void 0 : config.apiUrl]);
   reactExports.useEffect(() => {
     var _a2;
     (_a2 = messagesEndRef.current) == null ? void 0 : _a2.scrollIntoView({ behavior: "smooth" });
@@ -31458,6 +31479,9 @@ const ChatWidget = ({ config }) => {
       setNewMessage("");
     }
   };
+  const primaryColor = (widgetConfig == null ? void 0 : widgetConfig.primaryColor) || ((_a = config == null ? void 0 : config.theme) == null ? void 0 : _a.primaryColor) || defaultPrimary;
+  const position = (widgetConfig == null ? void 0 : widgetConfig.position) || (config == null ? void 0 : config.position) || defaultPosition;
+  const widgetLogoUrl = (widgetConfig == null ? void 0 : widgetConfig.widgetLogoUrl) || (config == null ? void 0 : config.widgetLogoUrl);
   const bubbleStyle = {
     background: primaryColor,
     color: "#fff",
@@ -31490,8 +31514,27 @@ const ChatWidget = ({ config }) => {
     overflow: "hidden",
     animation: "slideIn 0.25s"
   };
+  if (configLoading) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: bubbleStyle, title: "Cargando NNIA...", children: /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("circle", { cx: "12", cy: "12", r: "10", stroke: "white", strokeWidth: "2", strokeLinecap: "round", strokeDasharray: "31.416", strokeDashoffset: "31.416", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("animate", { attributeName: "stroke-dasharray", dur: "2s", values: "0 31.416;15.708 15.708;0 31.416", repeatCount: "indefinite" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("animate", { attributeName: "stroke-dashoffset", dur: "2s", values: "0;-15.708;-31.416", repeatCount: "indefinite" })
+    ] }) }) });
+  }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    !open && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: bubbleStyle, onClick: () => setOpen(true), title: "Abrir chat NNIA", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "32", height: "32", viewBox: "0 0 24 24", fill: "none", children: [
+    !open && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: bubbleStyle, onClick: () => setOpen(true), title: "Abrir chat NNIA", children: widgetLogoUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "img",
+      {
+        src: widgetLogoUrl,
+        alt: "NNIA",
+        style: {
+          width: 40,
+          height: 40,
+          borderRadius: "50%",
+          objectFit: "cover",
+          border: "2px solid rgba(255,255,255,0.3)"
+        }
+      }
+    ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "32", height: "32", viewBox: "0 0 24 24", fill: "none", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "12", cy: "12", r: "12", fill: "white", opacity: "0.15" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M7 10h10M7 14h6", stroke: "white", strokeWidth: "2", strokeLinecap: "round" })
     ] }) }),
@@ -31511,8 +31554,21 @@ const ChatWidget = ({ config }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          marginRight: 12
-        }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "12", cy: "12", r: "12", fill: primaryColor, opacity: "0.7" }) }) }),
+          marginRight: 12,
+          overflow: "hidden"
+        }, children: widgetLogoUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "img",
+          {
+            src: widgetLogoUrl,
+            alt: "Logo",
+            style: {
+              width: 40,
+              height: 40,
+              objectFit: "cover",
+              borderRadius: "50%"
+            }
+          }
+        ) : /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "12", cy: "12", r: "12", fill: primaryColor, opacity: "0.7" }) }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 600, fontSize: 18, color: "#222" }, children: "NNIA" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setOpen(false), style: { marginLeft: "auto", background: "none", border: "none", fontSize: 22, color: "#888", cursor: "pointer" }, title: "Cerrar", children: "×" })
       ] }),
@@ -31524,7 +31580,7 @@ const ChatWidget = ({ config }) => {
           background: msg.sender === "user" ? primaryColor : "#f3f4f6",
           color: msg.sender === "user" ? "#fff" : "#222",
           fontSize: 15,
-          boxShadow: msg.sender === "user" ? "0 2px 8px rgba(37,99,235,0.08)" : "0 1px 4px rgba(0,0,0,0.03)",
+          boxShadow: msg.sender === "user" ? `0 2px 8px ${primaryColor}20` : "0 1px 4px rgba(0,0,0,0.03)",
           borderBottomRightRadius: msg.sender === "user" ? 4 : 16,
           borderBottomLeftRadius: msg.sender === "user" ? 16 : 4
         }, children: msg.text }) }, msg.id)),
@@ -31543,7 +31599,25 @@ const ChatWidget = ({ config }) => {
             autoComplete: "off"
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "submit", style: { background: primaryColor, color: "#fff", border: "none", borderRadius: 8, padding: "0 18px", fontWeight: 600, fontSize: 15, cursor: "pointer" }, disabled: loading, children: "Enviar" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "submit",
+            style: {
+              background: primaryColor,
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              padding: "0 18px",
+              fontWeight: 600,
+              fontSize: 15,
+              cursor: "pointer",
+              transition: "opacity 0.2s"
+            },
+            disabled: loading,
+            children: "Enviar"
+          }
+        )
       ] })
     ] })
   ] });

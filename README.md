@@ -5,8 +5,8 @@ Widget de chat para integrar NNIA en sitios web externos.
 ## 🚀 Deploy
 
 El widget está desplegado en Vercel y disponible en:
-- **URL de producción**: `https://widget-nnia.vercel.app/`
-- **Archivo JS**: `https://widget-nnia.vercel.app/nnia-widget.umd.js`
+- **URL de producción**: `https://widget.iamnnia.com/`
+- **Archivo JS**: `https://widget.iamnnia.com/nnia-widget.umd.js`
 
 ## 📦 Instalación
 
@@ -14,7 +14,7 @@ El widget está desplegado en Vercel y disponible en:
 
 ```html
 <!-- NNIA Widget -->
-<script src="https://widget-nnia.vercel.app/nnia-widget.umd.js"></script>
+<script src="https://widget.iamnnia.com/nnia-widget.umd.js"></script>
 <script>
   window.initNNIAWidget({
     businessId: 'TU_BUSINESS_ID',
@@ -100,7 +100,7 @@ El widget se conecta al backend de NNIA usando los siguientes endpoints:
 ### Error: "window.initNNIAWidget is not a function"
 
 1. Verificar que el script se cargue correctamente
-2. Verificar la URL del script: `https://widget-nnia.vercel.app/nnia-widget.umd.js`
+2. Verificar la URL del script: `https://widget.iamnnia.com/nnia-widget.umd.js`
 3. Verificar que no haya errores de CORS
 
 ### Error: "Failed to load resource"
