@@ -111,10 +111,13 @@ const ChatWidget = ({ config }) => {
             display: 'flex', alignItems: 'center', padding: '16px', borderBottom: '1px solid #eee', background: '#fff',
           }}>
             <div style={{
-              width: 40, height: 40, borderRadius: '50%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 12
+              width: 40, height: 40, borderRadius: '50%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 12, overflow: 'hidden'
             }}>
-              {/* Placeholder logo */}
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill={primaryColor} opacity="0.7"/></svg>
+              {config?.widgetLogoUrl ? (
+                <img src={config.widgetLogoUrl} alt="Logo" style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: '50%' }} />
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill={primaryColor} opacity="0.7"/></svg>
+              )}
             </div>
             <span style={{ fontWeight: 600, fontSize: 18, color: '#222' }}>NNIA</span>
             <button onClick={() => setOpen(false)} style={{ marginLeft: 'auto', background: 'none', border: 'none', fontSize: 22, color: '#888', cursor: 'pointer' }} title="Cerrar">×</button>
