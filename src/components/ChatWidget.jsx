@@ -19,6 +19,16 @@ const getPositionStyle = (position) => {
   }
 };
 
+// Generar o recuperar visitorId único
+function getOrCreateVisitorId() {
+  let visitorId = localStorage.getItem('nnia_visitor_id');
+  if (!visitorId) {
+    visitorId = crypto.randomUUID();
+    localStorage.setItem('nnia_visitor_id', visitorId);
+  }
+  return visitorId;
+}
+
 const ChatWidget = ({ config }) => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -63,6 +73,8 @@ const ChatWidget = ({ config }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, open]);
 
+  const visitorId = getOrCreateVisitorId();
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (newMessage.trim() === '') return;
@@ -70,7 +82,7 @@ const ChatWidget = ({ config }) => {
     setMessages((prev) => [...prev, userMsg]);
     setLoading(true);
     try {
-      const data = await nniaService.sendMessage(newMessage);
+      const data = await nniaService.sendMessage(newMessage, visitorId);
       setMessages((prev) => [
         ...prev,
         { id: Date.now() + 1, sender: 'assistant', text: data.nnia || 'No se recibió respuesta de NNIA.' }

@@ -4,7 +4,7 @@ class NNIAService {
     this.businessId = config.businessId
   }
 
-  async sendMessage(message) {
+  async sendMessage(message, visitorId) {
     try {
       const response = await fetch(`${this.apiUrl}/nnia/respond`, {
         method: 'POST',
@@ -14,7 +14,8 @@ class NNIAService {
         body: JSON.stringify({
           message,
           clientId: this.businessId,
-          source: 'widget'
+          source: 'widget',
+          visitorId
         })
       })
 
