@@ -242,7 +242,7 @@ const ChatWidget = ({ config }) => {
           </div>
           {/* Prompts sugeridos */}
           {open && showPrompts && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, padding: '8px 12px 12px 12px', background: '#fff', borderBottom: '1px solid #f3f4f6' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2, padding: '8px 12px 12px 12px', background: '#fff', borderBottom: '1px solid #f3f4f6' }}>
               {[ 
                 '¿Cuáles son los servicios que ofrecen?',
                 '¿Cuál es el horario de atención?',
