@@ -184,7 +184,7 @@ const ChatWidget = ({ config }) => {
         <div style={chatWindowStyle} className="nnia-widget-card">
           {/* Header */}
           <div style={{
-            display: 'flex', alignItems: 'center', padding: '16px', borderBottom: '1px solid #eee', background: '#fff',
+            display: 'flex', alignItems: 'center', padding: '8px 16px', borderBottom: '1px solid #eee', background: '#fff',
           }}>
             <div style={{
               width: 40, height: 40, borderRadius: '50%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 12, overflow: 'hidden'
@@ -237,28 +237,63 @@ const ChatWidget = ({ config }) => {
             )}
             <div ref={messagesEndRef} />
           </div>
+          {/* Prompts sugeridos */}
+          {open && (
+            <div style={{ display: 'flex', gap: 8, padding: '8px 12px 0 12px', background: '#fff', borderBottom: '1px solid #f3f4f6' }}>
+              {[ 
+                '¿Cuáles son los servicios que ofrecen?',
+                '¿Cuál es el horario de atención?',
+                '¿Cómo puedo agendar una cita?'
+              ].map((prompt, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    color: '#ff9c9c',
+                    background: 'none',
+                    border: 'none',
+                    fontSize: 13,
+                    fontWeight: 400,
+                    padding: '4px 10px',
+                    borderRadius: 16,
+                    cursor: 'pointer',
+                    transition: 'background 0.15s',
+                    lineHeight: 1.35
+                  }}
+                  onClick={() => setNewMessage(prompt)}
+                >
+                  {prompt}
+                  <svg width="16" height="16" fill="none" stroke="#ff9c9c" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M5 12h14M13 18l6-6-6-6"/></svg>
+                </button>
+              ))}
+            </div>
+          )}
           {/* Input */}
-          <form onSubmit={handleSendMessage} style={{ display: 'flex', gap: 8, padding: 16, borderTop: '1px solid #eee', background: '#fff' }}>
+          <form onSubmit={handleSendMessage} style={{ display: 'flex', gap: 6, padding: '8px 12px', borderTop: '1px solid #eee', background: '#fff' }}>
             <input
               type="text"
               placeholder="Escribe un mensaje..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              style={{ flex: 1, border: '1px solid #e5e7eb', borderRadius: 8, padding: '10px 12px', fontSize: 15, outline: 'none' }}
+              style={{ flex: 1, border: '1px solid #e5e7eb', borderRadius: 8, padding: '7px 10px', fontSize: 15, outline: 'none' }}
               autoComplete="off"
             />
             <button 
               type="submit" 
               style={{ 
-                background: primaryColor, 
-                color: '#fff', 
-                border: 'none', 
+                background: '#fff', // blanco
+                color: '#111', // texto negro
+                border: '1px solid #e5e7eb',
                 borderRadius: 8, 
-                padding: '0 18px', 
+                padding: '0 14px', 
                 fontWeight: 600, 
                 fontSize: 15, 
                 cursor: 'pointer',
-                transition: 'opacity 0.2s'
+                transition: 'opacity 0.2s',
+                height: 36
               }} 
               disabled={loading}
             >
