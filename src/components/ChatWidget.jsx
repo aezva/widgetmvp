@@ -38,6 +38,7 @@ const ChatWidget = ({ config }) => {
   const [configLoading, setConfigLoading] = useState(true);
   const messagesEndRef = useRef(null);
   const nniaService = new NNIAService(config);
+  const [showPrompts, setShowPrompts] = useState(true);
 
   // Cargar configuración del widget desde el backend
   useEffect(() => {
@@ -78,6 +79,8 @@ const ChatWidget = ({ config }) => {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (newMessage.trim() === '') return;
+    // Ocultar prompts al enviar cualquier mensaje
+    setShowPrompts(false);
     const userMsg = { id: Date.now(), sender: 'user', text: newMessage };
     setMessages((prev) => [...prev, userMsg]);
     setLoading(true);
@@ -184,7 +187,7 @@ const ChatWidget = ({ config }) => {
         <div style={chatWindowStyle} className="nnia-widget-card">
           {/* Header */}
           <div style={{
-            display: 'flex', alignItems: 'center', padding: '8px 16px', borderBottom: '1px solid #eee', background: '#fff',
+            display: 'flex', alignItems: 'center', padding: '4px 10px', borderBottom: '1px solid #eee', background: '#fff',
           }}>
             <div style={{
               width: 40, height: 40, borderRadius: '50%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 12, overflow: 'hidden'
@@ -206,7 +209,7 @@ const ChatWidget = ({ config }) => {
                 </svg>
               )}
             </div>
-            <span style={{ fontWeight: 600, fontSize: 18, color: '#222' }}>NNIA</span>
+            <span style={{ fontWeight: 600, fontSize: 18, color: '#222', textTransform: 'uppercase', letterSpacing: 3 }}>NNIA</span>
             <button onClick={() => setOpen(false)} style={{ marginLeft: 'auto', background: 'none', border: 'none', fontSize: 22, color: '#888', cursor: 'pointer' }} title="Cerrar">×</button>
           </div>
           {/* Mensajes */}
@@ -238,8 +241,8 @@ const ChatWidget = ({ config }) => {
             <div ref={messagesEndRef} />
           </div>
           {/* Prompts sugeridos */}
-          {open && (
-            <div style={{ display: 'flex', gap: 8, padding: '8px 12px 0 12px', background: '#fff', borderBottom: '1px solid #f3f4f6' }}>
+          {open && showPrompts && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '8px 12px 0 12px', background: '#fff', borderBottom: '1px solid #f3f4f6' }}>
               {[ 
                 '¿Cuáles son los servicios que ofrecen?',
                 '¿Cuál es el horario de atención?',
@@ -257,13 +260,16 @@ const ChatWidget = ({ config }) => {
                     border: 'none',
                     fontSize: 13,
                     fontWeight: 400,
-                    padding: '4px 10px',
+                    padding: '6px 10px',
                     borderRadius: 16,
                     cursor: 'pointer',
                     transition: 'background 0.15s',
                     lineHeight: 1.35
                   }}
-                  onClick={() => setNewMessage(prompt)}
+                  onClick={() => {
+                    setNewMessage(prompt);
+                    setShowPrompts(false);
+                  }}
                 >
                   {prompt}
                   <svg width="16" height="16" fill="none" stroke="#ff9c9c" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M5 12h14M13 18l6-6-6-6"/></svg>
