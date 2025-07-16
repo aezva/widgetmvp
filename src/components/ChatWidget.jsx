@@ -101,7 +101,8 @@ const ChatWidget = ({ config }) => {
   // Usar configuración del backend o valores por defecto
   const primaryColor = widgetConfig?.primaryColor || config?.theme?.primaryColor || defaultPrimary;
   const position = widgetConfig?.position || config?.position || defaultPosition;
-  const widgetLogoUrl = widgetConfig?.widgetLogoUrl || config?.widgetLogoUrl;
+  const defaultLogo = 'https://cafolvqmbzzqwtmuyvnj.supabase.co/storage/v1/object/public/app-assets//nnia-profile-picture.webp';
+  const widgetLogoUrl = widgetConfig?.widgetLogoUrl || config?.widgetLogoUrl || defaultLogo;
 
   // Estilos para la burbuja flotante
   const bubbleStyle = {
@@ -167,7 +168,7 @@ const ChatWidget = ({ config }) => {
                 height: 40, 
                 borderRadius: '50%', 
                 objectFit: 'cover',
-                border: '2px solid rgba(255,255,255,0.3)'
+                boxShadow: '0 2px 8px rgba(0,0,0,0.18)'
               }} 
             />
           ) : (
