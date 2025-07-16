@@ -164,8 +164,8 @@ const ChatWidget = ({ config }) => {
               src={widgetLogoUrl} 
               alt="NNIA" 
               style={{ 
-                width: 40, 
-                height: 40, 
+                width: 60, // ahora ocupa todo el círculo
+                height: 60, // ahora ocupa todo el círculo
                 borderRadius: '50%', 
                 objectFit: 'cover',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.18)'
